@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.6.3/css/all.css"
+      integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/"
+      crossorigin="anonymous"
+    />
+    <link
+      href="https://fonts.googleapis.com/css?family=Arimo"
+      rel="stylesheet"
+    />
+    <title>Document</title>
+  </head>
+
+  <body>
+    <style>
+      :root {
+        --options: #247ba0;
+        --wrong: #ff1654;
+        --fontColor: #343e3d;
+        --correct: #53ffb8;
+        --outlines: #03b5aa;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        text-align: center;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        margin: 0;
+        color: var(--fontColor);
+        font-family: "Arimo", sans-serif;
+      }
+
+      .container {
+        display: flex;
+        width: 100%;
+        height: 100vh;
+        justify-content: space-between;
+        padding: 20px;
+      }
+
+      .left-bar {
+        width: 22%;
+        height: 100%;
+        /* border-right: 2px solid var(--outlines); */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        margin-right: 2px;
+      }
+
+      .levels {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 5px;
+        padding-left: 0;
+        height: calc(100vh / 15);
+        width: 100%;
+        text-align: center;
+        border: 0.5px solid var(--options);
+        border-radius: 6px;
+        transition: all 0.5s ease-in-out;
+      }
+      .current-level {
+        color: white;
+        background: var(--options);
+      }
+
+      .main {
+        width: 78%;
+        display: flex;
+        padding: 30px;
+        flex-direction: column;
+        align-items: center;
+        /* justify-content: space-evenly; */
+      }
+
+      .head-tab {
+        display: flex;
+        padding: 5px;
+        margin-top: 30px;
+        margin-bottom: 20px;
+        justify-content: space-between;
+        align-items: center;
+        height: 7vh;
+        /* background-color: var(--options); */
+        width: 100%;
+      }
+
+      .count-down {
+        border: 2px solid var(--options);
+        border-radius: 50%;
+        padding: 20px;
+        height: 80px;
+        width: 80px;
+        font-size: 2rem;
+        text-align: center;
+      }
+
+      .lives {
+        display: flex;
+      }
+
+      .box {
+        height: 30px;
+        overflow: hidden;
+        margin-left: 20px;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.5s ease;
+      }
+
+      i {
+        /* background: var(--wrong); */
+        color: var(--wrong);
+        /* background: var(--wrong); */
+      }
+
+      .question {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 45vh;
+        width: 85%;
+        padding: 30px;
+        padding-bottom: 20px;
+        font-size: 22px;
+        text-align: center;
+      }
+
+      .status {
+        display: none;
+        align-items: center;
+        justify-content: center;
+        height: 45vh;
+        width: 85%;
+        padding: 30px;
+        padding-bottom: 20px;
+        font-size: 3rem;
+        text-align: center;
+      }
+
+      hr {
+        width: 40%;
+        height: 7px;
+        border-radius: 20px;
+        background-color: var(--options);
+        margin: 0;
+      }
+
+      .options {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        width: 70%;
+        height: 30vh;
+        margin-top: 20px;
+      }
+
+      .option {
+        display: flex;
+        padding: 10px;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 45%;
+        height: 35%;
+        margin: 1%;
+        color: var(--options);
+        border: 2px solid var(--options);
+        border-radius: 20px;
+        /* background-color: #53ffb8; */
+        transition: all 0.4s ease;
+      }
+
+      .correct {
+        background-color: var(--correct);
+        color: white;
+      }
+      .correcto {
+        color: var(--correct);
+      }
+      .wrongo {
+        color: var(--wrong);
+      }
+
+      .wrong {
+        background-color: var(--wrong);
+        color: white;
+      }
+
+      /* .option:hover {
+            color: white;
+            background-color: var(--options);
+            border: (none)
+        } */
+
+      .move-up {
+        animation-name: moveUp;
+        animation-duration: 0.5s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: 1;
+      }
+
+      @keyframes moveUp {
+        0% {
+          transform: translateY(0px);
+        }
+
+        100% {
+          transform: translateY(-32px);
+        }
+      }
+
+      .flash {
+        animation-name: flash;
+        animation-duration: 0.6s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: infinite;
+      }
+
+      @keyframes flash {
+        0% {
+          opacity: 0;
+        }
+
+        50% {
+          opacity: 0.5;
+        }
+
+        100% {
+          opacity: 1;
+        }
+      }
+      .overlay {
+        position: absolute;
+        border-radius: 4px;
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 1px solid var(--outlines);
+        height: 350px;
+        width: 350px;
+        transition: all 0.5s ease;
+      }
+      .overlay h1 {
+        font-size: 3rem;
+      }
+      .play {
+        color: white;
+        background: var(--outlines);
+        padding: 13px 35px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.5s ease;
+      }
+      .play:hover {
+        background-color: var(--options);
+        transform: scale(1.1);
+      }
+
+      /* adding special classes of animation */
+      .blurMe {
+        animation-name: blurry;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: 1;
+      }
+
+      @keyframes blurry {
+        0% {
+          filter: blur(0px);
+        }
+        50% {
+          filter: blur(5px);
+        }
+        100% {
+          filter: blur(10px);
+        }
+      }
+      .showMe {
+        display: flex;
+        opacity: 0;
+        animation-name: showy;
+        animation-duration: 1s;
+        animation-fill-mode: forwards;
+        animation-iteration-count: 1;
+      }
+      @keyframes showy {
+        0% {
+          opacity: 0;
+        }
+        50% {
+          opacity: 0.5;
+        }
+        100% {
+          opacity: 1;
+        }
+      }
+    </style>
+    <div class="container">
+      <div class="left-bar">
+        <div class="levels top">20,000,000</div>
+        <div class="levels">15,000,000</div>
+        <div class="levels">10,000,000</div>
+        <div class="levels">5,000,000</div>
+        <div class="levels">2,000,000</div>
+        <div class="levels">1,000,000</div>
+        <div class="levels">750,000</div>
+        <div class="levels">500,000</div>
+        <div class="levels">250,000</div>
+        <div class="levels">100,000</div>
+        <div class="levels">50,000</div>
+        <div class="levels">20,000</div>
+        <div class="levels">5,000</div>
+        <div class="levels">1,000</div>
+        <div class="levels">500</div>
+      </div>
+
+      <div class="main">
+        <div class="head-tab">
+          <div class="count-down"></div>
+          <div class="lives">
+            <div class="box" data-key="1">
+              <i class="fas fa-heart fa-2x"></i>
+              <i class="far fa-heart fa-2x"></i>
+            </div>
+            <div class="box" data-key="2">
+              <i class="fas fa-heart fa-2x"></i>
+              <i class="far fa-heart fa-2x"></i>
+            </div>
+            <div class="box" data-key="3">
+              <i class="fas fa-heart fa-2x"></i>
+              <i class="far fa-heart fa-2x"></i>
+            </div>
+          </div>
+        </div>
+        <div class="status"></div>
+        <div class="question"></div>
+        <hr />
+        <div class="options">
+          <div class="option"></div>
+          <div class="option"></div>
+          <div class="option"></div>
+          <div class="option"></div>
+        </div>
+      </div>
+    </div>
+    <div class="overlay">
+      <h1 id="message">Game Over</h1>
+      <button class="play">Play Again.</button>
+    </div>
+    <script>
+      let lives = 3;
+      let quest = document.querySelector(".question");
+      let possibelAnswers = document.querySelectorAll(".option");
+      let options = [];
+      let correctAns;
+      let foo = document.querySelector(".count-down");
+      let time = 30;
+      let status = document.querySelector(".status");
+      let levels = document.querySelectorAll(".levels");
+      let curLev = 14;
+      let url = "https://opentdb.com/api.php?amount=1&difficulty=easy";
+      let container = document.querySelector(".container");
+      let overlay = document.querySelector(".overlay");
+      let play = document.querySelector(".play");
+      let message = document.querySelector("#message");
+      let interval;
+      window.onload = loadData();
+
+      function loadData() {
+        fetch(url)
+          .then(function(data) {
+            if (!data.ok) {
+              throw error;
+            }
+            return data.json();
+          })
+          .then(function(data) {
+            quest.style.display = "flex";
+            status.style.display = "none";
+            let obj = data.results[0];
+            levels[curLev].classList.add("current-level");
+            console.log(obj);
+            quest.innerHTML = `<p>${obj.question}</p>`;
+            let optiona = [];
+            optiona.push(obj.correct_answer);
+            correctAns = obj.correct_answer;
+            obj.incorrect_answers.forEach(option => {
+              optiona.push(option);
+            });
+            options = optiona.shuffle();
+            for (let i = 0; i < possibelAnswers.length; i++) {
+              possibelAnswers[i].innerHTML = `<p>${options[i]}</p>`;
+            }
+            time = 30;
+            timeFunc();
+          })
+          .catch(function(error) {
+            console.log(error);
+          });
+      }
+
+      possibelAnswers.forEach(one => {
+        one.addEventListener("click", function() {
+          clearInterval(interval);
+          checkAns(this);
+        });
+      });
+
+      function kill(lives) {
+        let heart = document.querySelectorAll(`.box`);
+        let arr = [];
+        for (let i = 0; i < heart.length; i++) {
+          if (heart[i].dataset.key > lives) {
+            arr.push(heart[i]);
+          }
+        }
+        arr.forEach(heart => {
+          heart.firstElementChild.classList.add("move-up");
+          heart.lastElementChild.classList.add("move-up");
+        });
+      }
+
+      Array.prototype.shuffle = function() {
+        let input = this;
+        for (let i = input.length - 1; i >= 0; i--) {
+          let newIndex = Math.floor(Math.random() * (i + 1));
+          let newRandom = input[newIndex];
+          input[newIndex] = input[i];
+          input[i] = newRandom;
+        }
+        return input;
+      };
+
+      function checkAns(testCase) {
+        if (testCase.textContent == correctAns) {
+          testCase.classList.add("correct");
+          displayMessage("true");
+          setTimeout(function() {
+            testCase.classList.remove("correct");
+            levels.forEach(lev => {
+              if (curLev != 0) {
+                lev.classList.remove("current-level");
+              }
+            });
+            curLev--;
+            if (curLev < 0) {
+              showOverlay("won");
+            } else {
+              if (curLev == 0) {
+                url =
+                  "https://opentdb.com/api.php?amount=1&difficulty=hard&type=multiple";
+              } else if (curLev < 8 && curLev > 0) {
+                url =
+                  "https://opentdb.com/api.php?amount=1&difficulty=medium&type=multiple";
+              } else {
+                url =
+                  "https://opentdb.com/api.php?amount=1&difficulty=easy&type=multiple";
+              }
+            }
+            loadData();
+          }, 2000);
+        } else {
+          testCase.classList.add("wrong");
+          displayMessage("false");
+          possibelAnswers.forEach(one => {
+            if (one.textContent == correctAns) {
+              one.classList.add("correct");
+            }
+          });
+          if (lives <= 0) {
+            showOverlay("lost");
+          } else {
+            setTimeout(function() {
+              possibelAnswers.forEach(one => {
+                one.classList.remove("correct");
+              });
+              testCase.classList.remove("wrong");
+              if (curLev == 0) {
+                url =
+                  "https://opentdb.com/api.php?amount=1&difficulty=hard&type=multiple";
+              } else if (curLev < 8 && curLev > 0) {
+                url =
+                  "https://opentdb.com/api.php?amount=1&difficulty=medium&type=multiple";
+              } else {
+                url =
+                  "https://opentdb.com/api.php?amount=1&difficulty=easy&type=multiple";
+              }
+              loadData();
+            }, 2000);
+          }
+        }
+        return;
+      }
+
+      function timeFunc() {
+        let over;
+        interval = setInterval(function() {
+          foo.textContent = time;
+          if (time == 0) {
+            over = true;
+            clearInterval(interval);
+            displayMessage("time");
+            if (lives <= 0) {
+              showOverlay("fail");
+            } else {
+              setTimeout(function() {
+                loadData();
+              }, 2000);
+            }
+          } else {
+            time--;
+          }
+        }, 1000);
+      }
+
+      function displayMessage(query) {
+        quest.style.display = "none";
+        status.style.display = "flex";
+        if (query === "true") {
+          status.innerHTML = `<h2 class="flash correcto"> Correct!</h2> `;
+          return;
+        } else if (query === "false") {
+          status.innerHTML = `<h2 class="flash wrongo">Wrong! Try harder next time</h2> `;
+          lives--;
+          kill(lives);
+          return;
+        } else {
+          status.innerHTML = `<h2 class="flash">Time Out. Watch out for the Clock</h2> `;
+          lives--;
+          kill(lives);
+          return;
+        }
+      }
+
+      function showOverlay(query) {
+        container.classList.add("blurMe");
+        overlay.classList.add("showMe");
+        if (query == "won") {
+          message.textContent = "You Won!";
+        } else {
+          message.textContent = "Game Over!";
+        }
+        play.addEventListener("mouseover", function() {
+          overlay.style.border = "2px solid #247ba0";
+        });
+        play.addEventListener("mouseleave", function() {
+          overlay.style.border = "1px solid #03b5aa";
+        });
+        play.addEventListener("click", function() {
+          container.classList.remove("blurMe");
+          overlay.classList.remove("showMe");
+          lives = 3;
+          time = 30;
+          curLev = 14;
+          let hearto = document.querySelectorAll(`.box`);
+          hearto.forEach(heart => {
+            heart.firstElementChild.classList.remove("move-up");
+            heart.lastElementChild.classList.remove("move-up");
+          });
+          levels.forEach(lev => {
+            lev.classList.remove("current-level");
+          });
+          clearInterval(interval);
+          possibelAnswers.forEach(option => {
+            option.classList.remove("correct");
+            option.classList.remove("wrong");
+          });
+          loadData();
+        });
+      }
+    </script>
+  </body>
+</html>
