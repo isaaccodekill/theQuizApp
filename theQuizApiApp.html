@@ -564,8 +564,10 @@
         });
         play.addEventListener("mouseleave", function() {
           overlay.style.border = "1px solid #03b5aa";
-        });
-        play.addEventListener("click", function() {
+        }); 
+      }
+      
+      play.addEventListener("click", function() {
           container.classList.remove("blurMe");
           overlay.classList.remove("showMe");
           lives = 3;
@@ -586,7 +588,8 @@
           });
           loadData();
         });
-      }
+      
+      
     </script>
   </body>
 </html>
